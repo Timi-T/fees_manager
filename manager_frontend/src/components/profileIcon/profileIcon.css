@@ -1,0 +1,20 @@
+#profile-icon-container {
+    border: 0.5px solid purple;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: purple;
+    transition: all .4s ease-in-out;
+    cursor: pointer;
+    margin-right: 80px;
+}
+#profile-icon-container:hover {
+    background-color: white;
+}
+#profile-icon-container:hover > svg {
+    transition: all .4s ease-in-out;
+    color: purple;
+}
