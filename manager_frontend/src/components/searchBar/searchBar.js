@@ -9,31 +9,25 @@ import PaneOption from '../paneOption/paneOption'
 const SearchBar = (props) => {
     //Searchbar component
 
-    //const cancelBtn = document.getElementById("clear-search")
     const [inputValue, setinputValue] = useState("")
+    const containsText = inputValue.length > 0
     var presentItems = []
-    const [displayItems, setdisplayItems] = useState([])
     const handleChange = (event) => {
         setinputValue(event.target.value)
-        const searchItems = document.getElementById("search-items") 
-        inputValue.length > 0 ? searchItems.style.display = "flex": searchItems.style.display = "none"
     }
+
     const ClearSearch = () => {
         setinputValue("")
-        const searchItems = document.getElementById("search-items")
-        searchItems.style.display = "none"
     }
-    presentItems = props.items.filter((item) => {
-        return (
-            item.includes(inputValue.toLowerCase())
-        )
-    })
-    /*setpresentItems(props.items.filter((item) => {
-        return (
-            item.includes(inputValue.toLowerCase())
-        )
-    }))*/
-    const containsText = inputValue.length > 0
+
+    if (containsText) {
+        presentItems = props.items.filter((item) => {
+            return (
+                item.includes(inputValue)
+            )
+        })
+    }
+
     return (
         <div id="search">
             <div id="search-container">

@@ -65,9 +65,8 @@ input:focus {
 }
 
 #search-items {
-    display: none;
+    display: flex;
     flex-direction: column;
-    
     position: relative;
     height: auto;
     max-height: 300px;
