@@ -21,7 +21,7 @@ const SidePane = () => {
                 <div id="side-options-container">
                     <PaneOption name={"Schools"} />
                     <PaneOption name={"Classrooms"} />
-                    <PaneOption name={"Student"} />
+                    <PaneOption name={"Students"} />
                     <PaneOption name={"Payments"} />
                 </div>
             </div>

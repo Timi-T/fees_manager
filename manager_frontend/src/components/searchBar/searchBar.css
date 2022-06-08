@@ -42,7 +42,7 @@ input:focus {
     border: 0.5px solid grey;
     background-color: whitesmoke;
     margin-top: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 #search-button {
