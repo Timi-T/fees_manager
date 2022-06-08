@@ -14,6 +14,8 @@ const MainView = () => {
         const mainView = document.getElementById("main-view")
         const rightProfile = document.getElementById("right-profile")
         const leftProfile = document.getElementById("left-profile")
+        const searchItems = document.getElementById("search-items")
+        searchItems.style.display = "none"
         dropdown.style.height = "0px"
         setTimeout(() => {
             rightProfile.style.display = "none"

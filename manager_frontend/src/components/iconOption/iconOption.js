@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const IconOption = (props) => {
     return (
-        <div class="icon" >
+        <div className="icon" >
             <FontAwesomeIcon icon={props.iconName} color="white" />
         </div>
     )

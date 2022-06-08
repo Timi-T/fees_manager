@@ -4,7 +4,7 @@ import './paneOption.css'
 
 const PaneOption = (props) => {
     return (
-        <div class="pane-option-container">
+        <div className="pane-option-container">
             <p>{props.name}</p>
         </div>
     )

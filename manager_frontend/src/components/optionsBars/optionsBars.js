@@ -32,7 +32,7 @@ const OptionsBars = () => {
     }
     return (
         <div id="options-container" onClick={ToggleSidePane}>
-            <FontAwesomeIcon icon={faBars} size="lg" color="purple" />
+            <FontAwesomeIcon icon={faBars} size="lg" color="whitesmoke" />
         </div>
     )
 }

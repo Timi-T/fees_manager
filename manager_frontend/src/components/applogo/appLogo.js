@@ -9,8 +9,8 @@ const AppLogo = () => {
     //Logo for website
     return (
         <div id="app-logo-container">
-            <a href="">
-                <FontAwesomeIcon icon={faPeopleRoof} size="2x" color="purple" />
+            <a href="/">
+                <FontAwesomeIcon icon={faPeopleRoof} size="2x" color="whitesmoke" />
             </a>
         </div>
     )

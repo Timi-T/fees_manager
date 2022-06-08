@@ -29,7 +29,7 @@ const ProfileIcon = () => {
 
     return (
         <div id="profile-icon-container" onClick={ToggleProfileDropdown}>
-            <FontAwesomeIcon icon={faUser} size="lg" color="white" />
+            <FontAwesomeIcon icon={faUser} size="lg" color="rgb(60, 7, 60)" />
         </div>
     )
 }

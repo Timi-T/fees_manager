@@ -21,7 +21,7 @@
 #left-profile {
     padding-top: 10px;
     width: 20%;
-    background-color: purple;
+    background-color: rgb(60, 7, 60);
     display: none;
     flex-direction: column;
     align-items: center;
