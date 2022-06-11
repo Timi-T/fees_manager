@@ -1,0 +1,42 @@
+#welcome-container {
+    background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    height: 100%;
+    margin-bottom: 50px;
+    color: rgb(60, 7, 60);
+    margin-top: -20px;
+    padding: 70px;
+    padding-bottom: 60px;
+    padding-left: 50px;
+    padding-right: 50px;
+    border-radius: 20px;
+}
+
+#welcome-title {
+    padding-bottom: 30px;
+}
+
+#welcome-text {
+    padding-bottom: 20px;
+}
+
+#welcome-text > h2 {
+    padding-bottom: 15px;
+}
+
+video {
+    width: 500px;
+    height: 250px;
+    margin-left: -60px;
+}
+
+#welcome-create-btn {
+    margin-top: 30px;
+}
+
+#demo-video {
+    padding-bottom: 50px;
+}

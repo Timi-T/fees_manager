@@ -11,7 +11,7 @@ const ProfileIcon = () => {
         const dropdown = document.getElementById("profile-dropdown-container")
         const rightProfile = document.getElementById("right-profile")
         const leftProfile = document.getElementById("left-profile")
-        if (dropdown.style.height === "0px") {
+        if (dropdown.style.height !== "135px") {
             dropdown.style.height = "135px"
             setTimeout(() => {
                 rightProfile.style.display = "block"

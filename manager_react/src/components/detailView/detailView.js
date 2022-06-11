@@ -7,7 +7,7 @@ import CircleBar from '../circleBar/circleBar'
 const DetailView = (props) => {
     return (
         <div id="detail-container">
-            <h2>{props.name}</h2>
+            <h1 id="detail-title">{props.name}</h1>
             {props.description ? <p>{props.description}</p>: <h3>{props.classname}</h3>}
             <div id="detail-table">
                 <div id="left-detail">

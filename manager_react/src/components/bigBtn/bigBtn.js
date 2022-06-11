@@ -4,7 +4,7 @@ import './bigBtn.css'
 
 const BigBtn = (props) => {
     return (
-        <div id="button">{props.text}</div>
+        <div id="button" style={{color: props.color, backgroundColor: props.bcolor}} >{props.text}</div>
     )
 }
 

@@ -1,5 +1,7 @@
 import React from 'react'
-import DetailView from '../detailView/detailView'
+import SchoolRegForm from '../schRegForm/schRegForm'
+//import DetailView from '../detailView/detailView'
+//import WelcomePage from '../welcomePage/welcomePage'
 //import DisplayCard from '../displayCard/displayCard'
 import './mainDisplay.css'
 
@@ -16,12 +18,25 @@ const MainDisplay = () => {
             <DisplayCard name={"Ogunbode Opeyemi"} description={"Primary 5"} object="Student"/>
             <DisplayCard name={"Ogunbode Opeyemi"} description={"Primary 5"} object="Student"/>
         </div>
-    )*/
+    )
 
     return (
         <div id="main">
             <DetailView name={"Potter's Home School"} description={"21, Akinsola Street, Dopemu Agege, Lagos"}/>
         </div>
     )
+
+    return (
+        <div id="main">
+            <WelcomePage name={"Opeyemi"} />
+        </div>
+    )*/
+
+    return (
+        <div id="main">
+            <SchoolRegForm />
+        </div>
+    )
 }
+
 export default MainDisplay
