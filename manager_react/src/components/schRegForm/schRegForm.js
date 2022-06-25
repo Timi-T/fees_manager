@@ -15,7 +15,7 @@ const SchoolRegForm = () => {
                 <input className="input-field" type="text" placeholder="" name="school-address"></input>
                 <p className="form-text">Level (Primary/Secondary)</p>
                 <input className="input-field" type="text" placeholder="" name="level"></input>
-                <SelectionDropdown dropdownName="classrooms" mode="single" />
+                <SelectionDropdown dropdownName="classrooms" custom={true} />
                 <p className="form-text" id="sch-reg-pwd">Admin Password</p>
                 <input className="input-field" type="password" placeholder="" name="password"></input>
             </form>
@@ -23,6 +23,12 @@ const SchoolRegForm = () => {
 
             <div id="submit-sch"><BigBtn text="Create school" bcolor="rgb(60, 7, 60)" color="white" /></div>
         </div>
+    )
+}
+
+const RegClassrooms = () => {
+    return (
+        <div></div>
     )
 }
 

@@ -1,8 +1,11 @@
 import React from 'react'
-import SchoolRegForm from '../schRegForm/schRegForm'
+import StudentDisplay from '../studentsDisplay/studentsDisplay'
+//import SchoolRegForm from '../schRegForm/schRegForm'
 //import DetailView from '../detailView/detailView'
 //import WelcomePage from '../welcomePage/welcomePage'
 //import DisplayCard from '../displayCard/displayCard'
+//import ClsRegForm from '../clsRegForm/clsRegForm'
+//import StuRegForm from '../stuRegForm/stuRegForm'
 import './mainDisplay.css'
 
 
@@ -32,9 +35,27 @@ const MainDisplay = () => {
         </div>
     )*/
 
-    return (
+    /*return (
         <div id="main">
             <SchoolRegForm />
+        </div>
+    )
+
+    return (
+        <div id="main">
+            <ClsRegForm />
+        </div>
+    )
+
+    return (
+        <div id="main">
+            <StuRegForm />
+        </div>
+    )*/
+
+    return (
+        <div id="studentDisplay">
+            <StudentDisplay />
         </div>
     )
 }

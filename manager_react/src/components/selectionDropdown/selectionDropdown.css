@@ -45,7 +45,7 @@
     display: none;
     position: absolute;
     height: auto;
-    width: 180px;
+    width: 200px;
     max-height: 200px;
     overflow: scroll;
     margin-top: -15px;
@@ -55,6 +55,8 @@
     width: 180px;
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-right: 15px;
+    padding-left: 5px;
     text-align: center;
     background-color: rgb(60, 7, 60);
     border: 0.5px solid grey;
@@ -70,4 +72,24 @@
 
 #add-class-btn:hover {
     background-color: rgb(60, 7, 60);
+}
+
+#add-custom {
+    background-color: rgb(60, 7, 60);
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+}
+
+#add-custom:hover {
+    cursor: pointer;
+    color: whitesmoke;
+}
+
+#custom-input-field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
 }

@@ -1,8 +1,8 @@
 import React from "react"
 import MainDisplay from "../mainDisplay/mainDisplay"
-import PageAside from "../pageAside/pageASide"
-import PaneOption from "../paneOption/paneOption"
-import ScrollBox from "../scrollBox/scrollBox"
+//import PageAside from "../pageAside/pageASide"
+//import PaneOption from "../paneOption/paneOption"
+//import ScrollBox from "../scrollBox/scrollBox"
 import './mainView.css'
 
 
@@ -30,11 +30,11 @@ const MainView = () => {
             }, 200)
         }
     }
+    //<PageAside title={"Students"} content={<ScrollBox widgets={[<PaneOption key={"ope"} name="Ogunbode opeyemi" bcolor="whitesmoke" color="rgb(60, 7, 60)" />]} /> } />
     return (
         <div>
             <div id="main-view" onClick={CloseOtherViews}>
                 <MainDisplay />
-                <PageAside title={"Students"} content={<ScrollBox widgets={[<PaneOption key={"ope"} name="Ogunbode opeyemi" bcolor="whitesmoke" color="rgb(60, 7, 60)" />]} /> } />
             </div>
         </div>
     )

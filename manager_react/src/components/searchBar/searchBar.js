@@ -14,8 +14,8 @@ const SearchBar = (props) => {
     var presentItems = []
     const handleChange = (event) => {
         setinputValue(event.target.value)
-        const searcItems = document.getElementById("search-items")
-        searcItems.style.display = "flex"
+        const searchItems = document.getElementById("search-items")
+        searchItems.style.display = "flex"
     }
 
     const ClearSearch = () => {

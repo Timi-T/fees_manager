@@ -94,8 +94,8 @@ const SelectionDropdown = (props) => {
                 </div>
             </div>
             <div id="custom-input-field">
-                <input className="input-field" id="custom" type="text" placeholder="Create custom classroom" name="custom-name"></input>
-                <p id="add-custom" onClick={ () => AddCustom() }>Add</p>
+                {props.custom ? <input className="input-field" id="custom" type="text" placeholder="Create custom classroom" name="custom-name"></input>: <p></p>}
+                {props.custom ?  <p id="add-custom" onClick={ () => AddCustom() }>Add</p>: <p></p>}
             </div>
         </div>
     )
