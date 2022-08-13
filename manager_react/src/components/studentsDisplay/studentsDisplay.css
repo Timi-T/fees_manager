@@ -1,5 +1,5 @@
 #students-view-con {
-    width: 100%;
+    width: 150%;
     height: auto;
     background-color: white;
     border-radius: 10px;
@@ -21,7 +21,7 @@
     padding: 20px;
     overflow: scroll;
     margin-bottom: 50px;
-    margin-top: -35px;
+    margin-top: -65px;
     padding-top: 0;
     font-size: .9rem;
 }
@@ -30,8 +30,10 @@
     width: 100%;
     height: 95%;
     background-color: white;
-    margin-top: 20px;
+    margin-top: 0px;
     margin-left: 25%;
+    display: flex;
+    flex-direction: column;
 }
 
 #filter-title {
@@ -185,4 +187,10 @@ input[type="checkbox"] {
 
 #min-percent {
     margin-bottom: 10px;
+}
+
+#regstu {
+    margin-top: -50px;
+    margin-bottom: 50px;
+    margin-left: 70%;
 }

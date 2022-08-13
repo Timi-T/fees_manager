@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import BigBtn from '../bigBtn/bigBtn';
 import'./studentsDisplay.css'
 
 const StudentDisplay = () => {
 
-    const students = []
+    const students = [];
     for (let i = 0; i < 256; i++) {
-       students.push({name: "Opeyemi Ogunbode", class: "Primary 1", fees: "59%", discount: "N/A", sex: "M", id: i, key: i + 'ope'})
+       students.push({name: "Opeyemi Ogunbode", class: "Primary 1", fees: "59%", discount: "N/A", sex: "M", id: i, key: i + 'ope'});
     }
-    students.push({name: "Timilehin Ogunbode", class: "Primary 3", fees: "89%", sex: "F", discount: "10%", id: 'p3', key: 'p3'})
+    students.push({name: "Timilehin Ogunbode", class: "Primary 3", fees: "89%", sex: "F", discount: "10%", id: 'p3', key: 'p3'});
     const classnames = ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6'];
     const sexes = ['M', 'F'];
     const [checkedSex, setCheckedSex] = useState(new Array(2).fill(false));
@@ -36,7 +38,7 @@ const StudentDisplay = () => {
             currentStudents = students;
         }
         currentStudents = currentStudents.concat(updatedStudentList);
-        return currentStudents
+        return currentStudents;
     }
 
     const FilterClass = (position) => {
@@ -47,7 +49,7 @@ const StudentDisplay = () => {
         /* Done resetting! */
         let updatedClassState = checkedClassrooms;
         updatedClassState = checkedClassrooms.map((cls, index) => {
-            return (index === position ? !cls : cls)
+            return (index === position ? !cls : cls);
         });
         setCheckedClassrooms(updatedClassState)
 
@@ -59,16 +61,16 @@ const StudentDisplay = () => {
             if (state) {
                 classEmpty = false;
                 let temp = ((students.filter((stu) => {
-                    return (stu.class === classnames[i])
+                    return (stu.class === classnames[i]);
                 })))
                 updatedStudentList = updatedStudentList.concat(temp);
             }
             i++;
         }
         if (classEmpty) {
-            setStudentList(students)
+            setStudentList(students);
         } else {
-            setStudentList(updatedStudentList)
+            setStudentList(updatedStudentList);
         }
         /* ==== Done updating list based on classrooms ==== */
     }
@@ -91,16 +93,16 @@ const StudentDisplay = () => {
             if (state) {
                 sexEmpty = false;
                 let temp = ((currentStudents.filter((stu) => {
-                    return (stu.sex === sexes[i])
+                    return (stu.sex === sexes[i]);
                 })))
                 updatedStudentList = updatedStudentList.concat(temp);
             }
             i++;
         }
         if (sexEmpty) {
-            setStudentList(currentStudents)
+            setStudentList(currentStudents);
         } else {
-            setStudentList(updatedStudentList)
+            setStudentList(updatedStudentList);
         }
 
         /* ==== Done updating based on sex ==== */
@@ -108,7 +110,7 @@ const StudentDisplay = () => {
 
     const FilterDiscount = () => {
         /* ==== Filter based on discounted fees ==== */
-        const currentStudents = CurrentFilters()
+        const currentStudents = CurrentFilters();
 
         // Uncheck other boxes except class boxes
         setCheckedSex([false, false]);
@@ -119,11 +121,11 @@ const StudentDisplay = () => {
         // Update students based on applied discounts    
         if (currentDiscount) {
             const updatedStudentList = ((currentStudents.filter((stu) => {
-                return (stu.discount != "N/A")
+                return (stu.discount !== "N/A");
             })))
-            setStudentList(updatedStudentList)
+            setStudentList(updatedStudentList);
         } else {
-            setStudentList(currentStudents)
+            setStudentList(currentStudents);
         }  
     }
 
@@ -164,8 +166,9 @@ const StudentDisplay = () => {
                 </div>
             </div>
         )
-    }    
+    }
 
+    const navigate = useNavigate();
     return (
         <div id="students-view-con">
             <div id="filters-con">
@@ -190,13 +193,24 @@ const StudentDisplay = () => {
                 </div>
             </div>
             <div id="students-con">
+                <div id="regstu" onClick={() => {
+                    navigate("/register-student");
+                }}>
+                    <BigBtn color="white" bcolor="rgb(60, 7, 60)" text="Register Student"/>
+                </div>
                 <div id="students-con-header">
                     <ScrollOption name={"Student name"} class={"Class"} fees={"Fees(%)"} discount={"Discount (%)"} sex={"Sex"} header={true} />
                 </div>
                 <div id="students-scroll-view">
                     {
                         studentList.map((stu) => {
-                            return (<ScrollOption key={stu.id} name={stu.name} class={stu.class} fees={stu.fees} discount={stu.discount} sex={stu.sex} header={false}/>)
+                            return (
+                                <div onClick={() => {
+                                    navigate("/students/" + stu.id)
+                                }}>
+                                    <ScrollOption key={stu.id} name={stu.name} class={stu.class} fees={stu.fees} discount={stu.discount} sex={stu.sex} header={false}/>
+                                </div>
+                            );
                         })
                     }
                 </div>
@@ -204,27 +218,6 @@ const StudentDisplay = () => {
         </div>
     )
 }
-
-/*export const ClassFilter = () => {
-    const classnames = ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6'];
-    return (
-        <div className="filter-component" id="ClassFilter">
-            <div className="filter-option"><p>..Classroom</p></div>
-            <div id="class-options">
-                {
-                    classnames.map((cls) => {
-                        return(
-                            <div className="c-o">
-                                <input type="checkbox" id={cls + 'opt'} value={cls}></input>
-                                <label for={cls + 'opt'}>{cls}</label><br></br>
-                            </div>
-                        );
-                    })
-                }
-            </div>
-        </div>
-    )
-}*/
 
 export const FeesFilter = () => {
     //const percentages = ["0 - 25", "26 - 50", "51 - 75", "76 - 100", "> 100" ]

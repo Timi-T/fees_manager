@@ -2,10 +2,12 @@ import React from 'react'
 import './clsRegForm.css'
 import BigBtn from '../bigBtn/bigBtn'
 import SelectionDropdown from '../selectionDropdown/selectionDropdown'
+import { useNavigate } from 'react-router-dom'
 
 
 const ClsRegForm = () => {
 
+    const navigate = useNavigate()
     return (
         <div id="class-reg-container">
             <h1 id="reg-class-title">The Potter's Home School</h1>
@@ -19,7 +21,11 @@ const ClsRegForm = () => {
                 <p className="form-text" id="cls-reg-pwd">Admin Password</p>
                 <input className="input-field" type="password" placeholder="" name="password"></input>
             </form>
-            <div id="submit-cls"><BigBtn text="Add classroom" bcolor="rgb(60, 7, 60)" color="white" /></div>
+            <div id="submit-cls" onClick={() => {
+                navigate("/classrooms");
+            }}>
+                <BigBtn text="Add classroom" bcolor="rgb(60, 7, 60)" color="white" />
+            </div>
         </div>
     )
 }

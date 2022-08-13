@@ -5,11 +5,11 @@ import MainView from '../mainView/mainView'
 import ProfileDropdown from '../profileDropdown/profileDropdown'
 
 
-const PageLayout = () => {
+const PageLayout = (props) => {
     return (
         <div id="section-below-header">
             <SidePane />
-            <MainView />
+            <MainView display={props.display} />
             <ProfileDropdown />
         </div>
     )

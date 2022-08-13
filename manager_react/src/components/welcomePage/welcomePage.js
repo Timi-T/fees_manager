@@ -1,9 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import BigBtn from '../bigBtn/bigBtn'
 import './welcomePage.css'
 
 
 const WelcomePage = (props) => {
+    
+    const navigate = useNavigate();
     return (
         <div id="welcome-container">
             <div id="welcome-title">
@@ -17,7 +20,9 @@ const WelcomePage = (props) => {
                 <video src="./demo.mp4" autoplay controls>
                 </video>
             </div>
-            <div id="welcome-create-btn">
+            <div id="welcome-create-btn" onClick={() => {
+                navigate("/register-school");
+            }}>
                 <BigBtn text="Create School" color="white" bcolor="rgb(60, 7, 60)" />
             </div>
         </div>

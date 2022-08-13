@@ -2,10 +2,12 @@ import React from 'react'
 import './stuRegForm.css'
 import BigBtn from '../bigBtn/bigBtn'
 import SelectionDropdown from '../selectionDropdown/selectionDropdown'
+import { useNavigate } from 'react-router-dom'
 
 
 const StuRegForm = () => {
 
+    const navigate =useNavigate()
     return (
         <div id="student-reg-container">
             <h1 id="reg-student-title">The Potter's Home School</h1>
@@ -25,10 +27,19 @@ const StuRegForm = () => {
                 <input className="input-field" type="number" placeholder="" name="discount" ></input>
                 <SelectionDropdown dropdownName="student classroom" mode="single" />
                 <p style={{color: "grey"}}>If you don't see the desired classroom from the dropdown, please proceed to create a new classroom before registering the student</p>
+                <div id="go-to-create" onClick={() => {
+                    navigate("/register-classroom");
+                }}>
+                    <BigBtn text="create new classroom"/>
+                </div>
                 <p className="form-text" id="stu-reg-pwd">Admin Password</p>
                 <input className="input-field" type="password" placeholder="" name="password"></input>
             </form>
-            <div id="submit-stu"><BigBtn text="Register" bcolor="rgb(60, 7, 60)" color="white" /></div>
+            <div id="submit-stu" onClick={() => {
+                navigate("/students");
+            }}>
+                <BigBtn text="Register" bcolor="rgb(60, 7, 60)" color="white" />
+            </div>
         </div>
     )
 }

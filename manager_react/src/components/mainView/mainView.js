@@ -6,7 +6,7 @@ import MainDisplay from "../mainDisplay/mainDisplay"
 import './mainView.css'
 
 
-const MainView = () => {
+const MainView = (props) => {
 
     const CloseOtherViews = () => {
         const sidePane = document.getElementById("side-pane-container")
@@ -34,7 +34,7 @@ const MainView = () => {
     return (
         <div>
             <div id="main-view" onClick={CloseOtherViews}>
-                <MainDisplay />
+                <MainDisplay display={props.display} />
             </div>
         </div>
     )

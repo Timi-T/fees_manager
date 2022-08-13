@@ -2,9 +2,11 @@ import React from 'react'
 import './schRegForm.css'
 import BigBtn from '../bigBtn/bigBtn'
 import SelectionDropdown from '../selectionDropdown/selectionDropdown'
+import { useNavigate } from 'react-router-dom'
 
 
 const SchoolRegForm = () => {
+    const navigate = useNavigate();
     return (
         <div id="school-reg-container">
             <h1 id="reg-school-title">Register School</h1>
@@ -21,14 +23,12 @@ const SchoolRegForm = () => {
             </form>
             
 
-            <div id="submit-sch"><BigBtn text="Create school" bcolor="rgb(60, 7, 60)" color="white" /></div>
+            <div id="submit-sch" onClick={() => {
+                navigate("/schools");
+            }}>
+                <BigBtn text="Create school" bcolor="rgb(60, 7, 60)" color="white" />
+            </div>
         </div>
-    )
-}
-
-const RegClassrooms = () => {
-    return (
-        <div></div>
     )
 }
 

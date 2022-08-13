@@ -1,4 +1,5 @@
 import React from 'react'
+import BigBtn from '../bigBtn/bigBtn'
 import './pageAside.css'
 //import SearchBar from '../searchBar/searchBar'
 
@@ -6,8 +7,8 @@ import './pageAside.css'
 const PageAside = (props) => {
     return (
         <div id="aside">
-            <h3 id="aside-title">{props.title}</h3>
-            {props.content}
+            <h2 id="aside-title">{"Manage " + props.view}</h2>
+            {props.options}
         </div>
     )
 }
