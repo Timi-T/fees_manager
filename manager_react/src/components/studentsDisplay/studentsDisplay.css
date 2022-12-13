@@ -24,6 +24,7 @@
     margin-top: -65px;
     padding-top: 0;
     font-size: .9rem;
+    margin-left: -2%;
 }
 
 #students-con {
@@ -34,7 +35,13 @@
     margin-left: 25%;
     display: flex;
     flex-direction: column;
+    margin-top: 20px;
 }
+
+/*#top-section {
+    position: absolute;
+    width: 100%;
+}*/
 
 #filter-title {
     margin-top: 30px;
@@ -193,4 +200,12 @@ input[type="checkbox"] {
     margin-top: -50px;
     margin-bottom: 50px;
     margin-left: 70%;
+}
+.scroll-col {
+    overflow: scroll;
+    font-weight: lighter;
+}
+
+.scroll-header {
+    font-size: large;
 }

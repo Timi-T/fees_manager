@@ -10,7 +10,7 @@ const PageLayout = (props) => {
         <div id="section-below-header">
             <SidePane />
             <MainView display={props.display} />
-            <ProfileDropdown />
+            { props.homeView ? null : <ProfileDropdown /> }
         </div>
     )
 }

@@ -1,21 +1,98 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import BigBtn from '../bigBtn/bigBtn';
+import { Loader } from '../Loader/Loader';
 import'./studentsDisplay.css'
+import DisplayCard from '../displayCard/displayCard';
 
 const StudentDisplay = () => {
 
-    const students = [];
-    for (let i = 0; i < 256; i++) {
-       students.push({name: "Opeyemi Ogunbode", class: "Primary 1", fees: "59%", discount: "N/A", sex: "M", id: i, key: i + 'ope'});
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
+    const [students, setStudents] = useState('');
+    const [studentList, setStudentList] = useState('');
+    const [classnames, setClassnames] = useState([]);
+    const alertMessage = (message, display, color) => {
+        const msg = document.getElementById('err-msg');
+        msg.innerHTML = message;
+        msg.style.display = display;
+        msg.style.color = color;
     }
-    students.push({name: "Timilehin Ogunbode", class: "Primary 3", fees: "89%", sex: "F", discount: "10%", id: 'p3', key: 'p3'});
-    const classnames = ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6'];
-    const sexes = ['M', 'F'];
+
+    useEffect(() => {
+        alertMessage('', 'none', 'green');
+        fetch(`http://localhost:5002/api/v1/students?schoolName=${localStorage.currentSchool}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+        })
+        .then((response) => {
+          if (response.ok) { 
+              response.json().then((data) => {
+                setStudents(data.success);
+                setStudentList(data.success);
+                setTimeout(() => {
+                  setIsLoading(false);
+                }, 1000);
+              });
+          } else if(response.status === 401) {
+              navigate('/login');
+          } else {
+              response.json().then((message) => {
+                  setIsLoading(false);
+                  alertMessage(message.error, 'block', 'red');
+              })
+          }
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          alertMessage('An error occured. Please retry', 'block', 'red');
+          console.log(err.message)
+        });
+
+        fetch(`http://localhost:5002/api/v1/classrooms?schoolName=${localStorage.currentSchool}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+        })
+        .then((response) => {
+          if (response.ok) { 
+              response.json().then((data) => {
+                const classList = data.success.sort().map((cls) => {
+                    return cls.name;
+                })
+                classList.sort();
+                setClassnames(classList)
+                setCheckedClassrooms(new Array(classList.length).fill(false))
+                setTimeout(() => {
+                  setIsLoading(false);
+                }, 1000);
+              });
+          } else if(response.status === 401) {
+              navigate('/login');
+          } else {
+              response.json().then((message) => {
+                  setIsLoading(false);
+                  //alertMessage(message.error, 'block', 'red');
+              })
+          }
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          //alertMessage('An error occured. Please retry', 'block', 'red');
+          console.log(err.message)
+        });
+      }, []);
+
+    //const classnames = ['Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6'];
+    const sexes = ['Male', 'Female'];
     const [checkedSex, setCheckedSex] = useState(new Array(2).fill(false));
-    const [checkedClassrooms, setCheckedClassrooms] = useState(new Array(classnames.length).fill(false));
+    const [checkedClassrooms, setCheckedClassrooms] = useState([]);
     const [checkedDiscount, setCheckedDiscount] = useState(false);
-    const [studentList, setStudentList] = useState(students);
     const [searchText, setSearchText] = useState('');
 
     const CurrentFilters = () => {
@@ -61,7 +138,7 @@ const StudentDisplay = () => {
             if (state) {
                 classEmpty = false;
                 let temp = ((students.filter((stu) => {
-                    return (stu.class === classnames[i]);
+                    return (stu.classroom === classnames[i]);
                 })))
                 updatedStudentList = updatedStudentList.concat(temp);
             }
@@ -121,7 +198,7 @@ const StudentDisplay = () => {
         // Update students based on applied discounts    
         if (currentDiscount) {
             const updatedStudentList = ((currentStudents.filter((stu) => {
-                return (stu.discount !== "N/A");
+                return (stu.discount > 0);
             })))
             setStudentList(updatedStudentList);
         } else {
@@ -139,7 +216,7 @@ const StudentDisplay = () => {
         setCheckedClassrooms(resetClass);
         if (event.target.value.length > 0) {
             const currentStudents = students.filter((stu) => {
-                return (stu.name.toLowerCase().includes(event.target.value));
+                return (stu.fullname.toLowerCase().includes(event.target.value));
             })
             setStudentList(currentStudents);
         }
@@ -148,7 +225,7 @@ const StudentDisplay = () => {
         }
     }
 
-    const ClassFilter = () => {
+    const ClassFilterComponent = () => {
         return (
             <div className="filter-component" id="ClassFilter">
                 <div className="filter-option"><p>..Classroom</p></div>
@@ -168,12 +245,11 @@ const StudentDisplay = () => {
         )
     }
 
-    const navigate = useNavigate();
     return (
         <div id="students-view-con">
             <div id="filters-con">
-                <div id="filter-title"><h3>Filter by...</h3></div>
-                <ClassFilter />
+                <div id="filter-title"><h5>Filter by...</h5></div>
+                <ClassFilterComponent />
                 <FeesFilter />
                 <div id="sex-filter">
                     <div className="filter-option"><p>..Sex</p></div>
@@ -193,27 +269,31 @@ const StudentDisplay = () => {
                 </div>
             </div>
             <div id="students-con">
-                <div id="regstu" onClick={() => {
-                    navigate("/register-student");
-                }}>
-                    <BigBtn color="white" bcolor="rgb(60, 7, 60)" text="Register Student"/>
+                <div id="top-section">
+                    <div id="regstu" onClick={() => {
+                        navigate("/register-student");
+                    }}>
+                        <BigBtn color="white" bcolor="rgb(60, 7, 60)" text="Register Student"/>
+                    </div>
+                    <div id="students-con-header">
+                        <ScrollOption name={"Student name"} class={"Class"} fees={"Fees(%)"} discount={"Discount (%)"} sex={"Sex"} header={true} />
+                    </div>
                 </div>
-                <div id="students-con-header">
-                    <ScrollOption name={"Student name"} class={"Class"} fees={"Fees(%)"} discount={"Discount (%)"} sex={"Sex"} header={true} />
+                <div id="login-signup-msg">
+                    <h5 id="err-msg"></h5>
                 </div>
-                <div id="students-scroll-view">
-                    {
-                        studentList.map((stu) => {
-                            return (
-                                <div onClick={() => {
-                                    navigate("/students/" + stu.id)
-                                }}>
-                                    <ScrollOption key={stu.id} name={stu.name} class={stu.class} fees={stu.fees} discount={stu.discount} sex={stu.sex} header={false}/>
-                                </div>
-                            );
-                        })
-                    }
-                </div>
+                {
+                    isLoading ? <Loader loadingText={'Loading...'} /> :
+                    studentList ? studentList.map((stu) => {
+                        return (
+                            <div key={stu._id} onClick={() => {
+                                navigate(`/students/${String(stu._id)}`)
+                            }}>
+                                <ScrollOption key={stu._id} name={stu.fullname} class={stu.classroom} fees={stu.totalPaidFees} discount={stu.discount} sex={stu.sex} header={false}/>
+                            </div>
+                        );
+                    }) : <div></div>
+                }
             </div>
         </div>
     )
@@ -232,27 +312,15 @@ export const FeesFilter = () => {
 
 export const ScrollOption = (props) => {
 
-    if (props.header) {
-        return (
-            <div id="ScrollOption-header">
-                <div id="scroll-name"><h3>{props.name}</h3></div>
-                <div id="scroll-class"><h3>{props.class}</h3></div>
-                <div id="scroll-fees"><h3>{props.fees}</h3></div>
-                <div id="scroll-sex"><h3>{props.sex}</h3></div>
-                <div id="scroll-discount"><h3>{props.discount}</h3></div>
-            </div>
-        )
-    } else {
-        return (
-            <div id="ScrollOption">
-                <div id="scroll-name"><p>{props.name}</p></div>
-                <div id="scroll-class"><p>{props.class}</p></div>
-                <div id="scroll-fees"><p>{props.fees}</p></div>
-                <div id="scroll-sex"><p>{props.sex}</p></div>
-                <div id="scroll-discount"><p>{props.discount}</p></div>
-            </div>
-        )
-    }
+    return (
+        <div id={props.header ? "ScrollOption-header" : "ScrollOption"}>
+            <div className={props.header ? 'scroll-header' : 'scroll-col'} id="scroll-name"><h5>{props.name}</h5></div>
+            <div className={props.header ? 'scroll-header' : 'scroll-col'} id="scroll-class"><h5>{props.class}</h5></div>
+            <div className={props.header ? 'scroll-header' : 'scroll-col'} id="scroll-fees"><h5>{props.fees}</h5></div>
+            <div className={props.header ? 'scroll-header' : 'scroll-col'} id="scroll-sex"><h5>{props.sex}</h5></div>
+            <div className={props.header ? 'scroll-header' : 'scroll-col'} id="scroll-discount"><h5>{props.discount}</h5></div>
+        </div>
+    )
 }
 
 export default StudentDisplay

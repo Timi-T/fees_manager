@@ -1,24 +1,65 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./schoolsDisplay.css"
 import DisplayCard from "../displayCard/displayCard";
 import { useNavigate } from "react-router-dom";
 import BigBtn from "../bigBtn/bigBtn";
+import { Loader } from "../Loader/Loader";
 
-
-const schools = [
-                    {'name': "The Lordsfield Schools 1", "description": "1 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 2", "description": "2 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 3", "description": "3 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 4", "description": "4 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 5", "description": "5 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 6", "description": "6 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 7", "description": "7 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 8", "description": "8 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 9", "description": "9 Olusola street Agege Lagos"},
-                    {'name': "The Lordsfield Schools 10", "description": "10 Olusola street Agege Lagos"},
-]
 const SchoolsDisplay = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
+    const [container, setContainer] = useState('');
+    const alertMessage = (message, display, color) => {
+        const msg = document.getElementById('err-msg');
+        msg.innerHTML = message;
+        msg.style.display = display;
+        msg.style.color = color;
+    }
+    useEffect(() => {
+      fetch('http://localhost:5002/api/v1/schools', {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+      })
+      .then((response) => {
+        if (response.ok) { 
+            response.json().then((data) => {
+              const schools = data.success;
+              setTimeout(() => {
+                setContainer(
+                    schools.map( (sch) => {
+                        return (
+                            <div key={sch._id} onClick={() => {
+                                navigate("/schools/" + sch.name.replace(new RegExp(' ', 'g'), '_'));
+                            }}>
+                                <DisplayCard name={sch.name} description={sch.address} />
+                            </div>
+                        )
+                    })
+                )
+                const containerDisplay = document.getElementById('container');
+                containerDisplay.style.display = 'grid';
+                setIsLoading(false);
+              }, 1000);
+            });
+        } else if(response.status === 401) {
+            navigate('/login');
+        } else {
+            response.json().then((message) => {
+                setIsLoading(false);
+                alertMessage(message.error, 'block', 'red');
+            })
+        }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        alertMessage('An error occured. Please retry', 'block', 'red');
+        console.log(err.message)
+      });
+    }, []);
+
     return (
         <div id="big-con">
             <div id="schools-header">
@@ -29,18 +70,13 @@ const SchoolsDisplay = () => {
             }}>
                 <BigBtn text="Register school" bcolor="rgb(60, 7, 60)" color="white" />
             </div>
+            <div id="login-signup-msg">
+                <h3 id="err-msg"></h3>
+            </div>
             <div id="container">
-                {
-                    schools.map( (sch) => {
-                        return (
-                            <div onClick={() => {
-                                navigate("/schools/" + sch.id);
-                            }}>
-                                <DisplayCard name={sch.name} description={sch.description} />
-                            </div>
-                        )
-                    })
-                }
+              {
+                isLoading ? <Loader loadingText={'Loading...'} /> : container
+              }
             </div>
         </div>
     )

@@ -6,8 +6,14 @@ import './pageAside.css'
 
 const PageAside = (props) => {
     return (
+        props.view === 'payment'
+        ?
+        <div id='blank-aside'></div>
+        :
         <div id="aside">
-            <h2 id="aside-title">{"Manage " + props.view}</h2>
+            {
+                <h2 id="aside-title">{"Manage " + props.view}</h2>
+            }
             {props.options}
         </div>
     )

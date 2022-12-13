@@ -1,5 +1,6 @@
 import React from "react"
 import MainDisplay from "../mainDisplay/mainDisplay"
+import DisplayMessage from '../displayMessage/displayMessage';
 //import PageAside from "../pageAside/pageASide"
 //import PaneOption from "../paneOption/paneOption"
 //import ScrollBox from "../scrollBox/scrollBox"

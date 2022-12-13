@@ -4,15 +4,16 @@ import SearchBar from '../searchBar/searchBar'
 import ProfileIcon from '../profileIcon/profileIcon'
 import AppLogo from './applogo/appLogo'
 import OptionsBars from '../optionsBars/optionsBars'
+import { useState, useEffect } from 'react'
 
-const objects = ["Opeyemi", "Ogunbode", "Potters home school", "Lordsfield", "dayo", "kemi", "tayo", "bayo", "rhoda", "tosin", "loke", "shola", "adeyemi", "bola", "kola"]
 const Header = () => {
     //Entire page header
+    const [currentSch, setCurrentSch] = useState(localStorage.getItem('currentSchool'));
     return (
         <header id="header-container">
             <OptionsBars />
-            <AppLogo />
-            <SearchBar items={objects}/>
+            <AppLogo school={currentSch} />
+            <SearchBar />
             <ProfileIcon />
         </header>
     )

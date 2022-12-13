@@ -1,6 +1,10 @@
+:root {
+    --percentage: 0;
+}
+
 #outer-circle {
-    width: 180px;
-    height: 180px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     background-color: white;
     border: 0.5px solid white;
@@ -8,14 +12,14 @@
 }
 
 #inner-circle {
-    width: 140px;
-    height: 140px;
+    width: 190px;
+    height: 190px;
     border-radius: 50%;
     background-color: whitesmoke;
     border: 0.5px solid white;
     box-shadow: inset 2px 2px 2px 2px rgb(205, 200, 200);
-    margin-top: 20px;
-    margin-left: 20px;
+    margin-top: 5px;
+    margin-left: 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,21 +32,23 @@ circle {
     fill: none;
     stroke: url(#GradientColor);
     /*stroke: rgb(60, 7, 60);*/
-    stroke-width: 20px;
-    stroke-dasharray: 500;
-    /*stroke-dashoffset: calc(500 - ((72 / 100) * 450));*/
-    stroke-dashoffset: 500;
-    animation: anim 2s linear forwards;
+    stroke-width: 5px;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    /*stroke-dashoffset: 500;*/
+    animation: anim 0s linear forwards;
+    transition: all 1s ease-in-out;
 }
 
 #progress-bar {
     position: absolute;
-    margin-top: -180px;
-    margin-left: 0.5px;
+    margin-top: -200px;
+    margin-left: 1px;
 }
 
 @keyframes anim {
     100%{
-        stroke-dashoffset: 172;
+        stroke-dashoffset: calc(1000 - ((var(--percentage) /100) * 650));
     }
 }
+/**/

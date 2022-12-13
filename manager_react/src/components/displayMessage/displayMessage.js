@@ -13,7 +13,7 @@ const DisplayMessage = (props) => {
 
     return (
         <div id="message-box">
-            <p>{props.message}</p>
+            <p id='alert-message'>{props.message}</p>
             <div id="cancel-message" onClick={CloseMessage} >
                 <FontAwesomeIcon icon={faXmarkCircle} color="purple" />
             </div>
