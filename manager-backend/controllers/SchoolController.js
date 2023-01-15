@@ -90,6 +90,40 @@ class SchoolController {
       return response.status(404).send({ error: 'School doesn\'t exist. Please check url and retry' });
     }
   }
+
+  // Method to edit student information
+  async editSchool(request, response) {
+    // Getting request data and declaring relavant variables
+    let { schoolName } = request.params;
+    const user = request.user;
+    let info = request.body || {};
+    info.updatedAt = new Date;
+    schoolName = schoolName.replace(new RegExp('_', 'g'), ' ').replace(new RegExp('%20', 'g'), ' ');
+  
+    // Get School form DB
+    const school = await dbClient.get('schools', { name: schoolName });
+    if (school) {
+      // Check if the new School name has been used
+      if (info.name) {
+        const userSchools = await dbClient.get('schools', { 
+          name: info.name,
+        });
+        if (userSchools) {
+          return response.status(409).send({ error: 'You already have a School registered with this name.' });
+        }
+      }
+
+      const saved = await dbClient.put('schools', { name: schoolName }, info);
+      if (saved) {
+        info.name ? schoolName = info.name : schoolName = schoolName;
+        const updatedSchool = await dbClient.get('schools', { name: schoolName });
+
+        return response.send({ success: updatedSchool[0]});
+      }
+    } else {
+      return response.status(404).send({ error: 'School doesn\'t exist. Please check name and retry' });
+    }
+  }
 }
 
 // Exporting class instance

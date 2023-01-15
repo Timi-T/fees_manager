@@ -21,10 +21,10 @@ class AuthController {
     const user = await dbClient.get('users', { email });
 
     // When user exists
-    if (user.length > 0) {
+    if (user) {
       // Check if email of user is verified
       if (!user[0].verifiedEmail) {
-        return response.status(400).send({ 'error': 'Account not verified. Please verify your email to continue' });
+        return response.status(400).send({ 'error': 'Account not verified.' });
       }
 
       // Compare provided password with actual user password
@@ -38,11 +38,11 @@ class AuthController {
       }
       
       // When passwords don't match
-      return response.status(400).send({ 'error': 'Invalid login credentials. Please check the provided fields' });
+      return response.status(400).send({ 'error': 'Invalid login email or password.' });
     }
 
     // When user doesn't exist
-    return response.status(404).send({ 'error': 'Invalid login credentials. Please check the provided fields' });
+    return response.status(404).send({ 'error': 'Invalid login email or password.' });
   }
 
   // Function to get user for a session

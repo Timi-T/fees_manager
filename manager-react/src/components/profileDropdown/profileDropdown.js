@@ -2,14 +2,15 @@ import { faUserShield, faArrowRightFromBracket, faUserGear } from '@fortawesome/
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import IconOption from '../iconOption/iconOption'
-import PaneOption from '../paneOption/paneOption'
+import PaneOption from '../PaneOption/PaneOption'
 import './profileDropdown.css'
 
+const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST;
 
 const ProfileDropdown = () => {
     const navigate = useNavigate();
     const logout = () => {
-      fetch('http://localhost:5002/api/v1/logout', {
+      fetch(`${BACKEND_HOST}/logout`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +48,7 @@ const ProfileDropdown = () => {
                 </div>
                 <PaneOption name={"Admin"}/>
                 <div onClick={() => {
-                    logout();
+                  logout();
                 }}>
                     <PaneOption name={"Logout"}/>
                 </div>

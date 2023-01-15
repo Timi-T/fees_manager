@@ -1,11 +1,46 @@
 import React, { useEffect } from 'react'
-import './detailView.css'
-import PaneOption from '../paneOption/paneOption'
+import './DetailView.css'
+//import PaneOption from '../PaneOption/PaneOption'
 import CircleBar from '../circleBar/circleBar'
 import { Loader } from "../Loader/Loader";
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getDate, money } from '../paymentsDisplay/paymentsDisplay';
+import PreviousIcon from '../PreviousIcon/PreviousIcon';
+
+const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST;
+
+export const getDate = (dateString, fulldate=false) => {
+
+    // Get year, month, and day part from the date
+    const date = new Date(dateString);
+    if (!fulldate) {
+        const year = date.toLocaleString("default", { year: "numeric" });
+        const month = date.toLocaleString("default", { month: "2-digit" });
+        const day = date.toLocaleString("default", { day: "2-digit" });
+        // Generate yyyy-mm-dd date string
+        const formattedDate = day + "-" + month + "-" + year;
+        return formattedDate;
+    } else {
+        // Generate full date string
+        return date.toUTCString();
+    }
+}
+
+export const money = (amount) => {
+    const amountStr = String(amount)
+    let i = amountStr.length - 1;
+    let j = 1;
+    let cash = '';
+    while (i > -1) {
+        cash = amountStr[i] + cash;
+        if (i && j % 3 === 0) {
+            cash = ',' + cash;
+        }
+        i--;
+        j++;
+    }
+    return cash;
+}
 
 const DetailView = (props) => {
     const navigate = useNavigate();
@@ -22,7 +57,7 @@ const DetailView = (props) => {
     }
 
     useEffect(() => {
-      fetch(`http://localhost:5002/api/v1/${props.queryObj.resource}/${props.queryObj.filter}?schoolName=${localStorage.currentSchool}`, {
+      fetch(`${BACKEND_HOST}/${props.queryObj.resource}/${props.queryObj.filter}?schoolName=${localStorage.currentSchool}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -40,33 +75,49 @@ const DetailView = (props) => {
                     headerDisplay.innerHTML = data.name;
                     percentage = 20;
                     options = [
+                        { 'Level': data.level },
                         { 'No of Students': data.noOfStudents },
                         { 'No of Classrooms': data.noOfClassrooms },
-                        { 'Total Fees paid': data.totalFees },
-                        { 'Total Fees expected': data.feesExpected },
+                        { 'Total Fees paid': `NGN ${money(data.totalFees)}` },
+                        { 'Total Fees expected': `NGN ${money(0)}` },
                         { 'Address': data.address },
+                        { 'School ID': data._id },
+                        { 'Date created': getDate(data.createdAt, true) },
+                        { 'Last updated': getDate(data.updatedAt, true) },
                     ]
                 } else if (props.view === "classroom") {
                     percentage = 15;
                     options = [
+                        { 'School': localStorage.currentSchool },
                         { 'Class Teacher': data.classTeacher },
                         { 'No of Students': data.noOfStudents },
-                        { 'Total Fees paid': data.totalFees},
-                        { 'Total Fees expected': data.totalFeesExpected },
+                        { 'class Fees': `NGN ${money(data.classFees)}` },
+                        { 'Total Fees paid': `NGN ${money(data.totalFees)}`},
+                        { 'Total Fees expected': `NGN ${money(data.totalFeesExpected)}` },
+                        { 'Classroom ID': data._id },
+                        { 'Date created': getDate(data.createdAt, true) },
+                        { 'Last updated': getDate(data.updatedAt, true) },
                     ]
                 } else if (props.view === "student") {
                     percentage = 10;
                     options = [
+                        { 'School': localStorage.currentSchool },
                         { 'Class': data.classroom },
                         { 'Age': data.age },
                         { 'Sex': data.sex },
-                        { 'Total Fees paid': data.totalPaidFees },
-                        { 'Total Fees Expected': data.totalFeesExpected },
+                        { 'Discount': data.discount },
+                        { 'Parent phone': data.phoneNo },
+                        { 'Total Fees paid': `NGN ${money(data.totalPaidFees)}` },
+                        { 'Total Fees Expected': `NGN ${money(data.totalFeesExpected)}` },
+                        { 'Student ID': data._id },
+                        { 'Date created': getDate(data.createdAt, true) },
+                        { 'Last updated': getDate(data.updatedAt, true) },
                     ]
                 } else if (props.view === "payment") {
                     percentage = 100;
                     options = [
                         { 'Student name': data.studentName },
+                        { 'Student class': data.studentClass },
                         { 'Depositor name': data.depositorName },
                         { 'Depositor email': data.email },
                         { 'Purpose': data.purpose },
@@ -126,6 +177,9 @@ const DetailView = (props) => {
             <div id="detail-container">
                 <div id="login-signup-msg">
                     <h3 id="err-msg"></h3>
+                </div>
+                <div id='prev-icon'>
+                    <PreviousIcon path={-1} />
                 </div>
                 {isLoading ? <Loader loadingText={'Loading...'} /> : table }
             </div>

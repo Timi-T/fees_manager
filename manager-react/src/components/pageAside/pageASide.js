@@ -1,5 +1,5 @@
 import React from 'react'
-import BigBtn from '../bigBtn/bigBtn'
+import BigBtn from '../BigBtn/BigBtn'
 import './pageAside.css'
 //import SearchBar from '../searchBar/searchBar'
 

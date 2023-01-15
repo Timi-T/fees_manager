@@ -74,6 +74,7 @@ class PaymentController {
     // Getting request data and declaring relavant variables
     const user = request.user;
     let { schoolName } = request.query;
+    let { classroom } = request.query;
     schoolName = schoolName.replace(new RegExp('%20', 'g'), ' ');
 
     // Get the school Id from provided name
@@ -83,11 +84,21 @@ class PaymentController {
     }
     const schoolId = (schData[0])._id;
 
-    const payments = await dbClient.get('payments', { schoolId });
+    let payments;
+    if (classroom) {
+      classroom = classroom.replace(new RegExp('%20', 'g'), ' ');
+      payments = await dbClient.get('payments', { schoolId, studentClass: classroom });
+    } else {
+      payments = await dbClient.get('payments', { schoolId });
+    }
     if (payments) {
       response.send({ success: payments });
     } else {
-      response.status(404).send({ error: 'No Payments records!'});
+      if (classroom) {
+        return response.status(404).send({ error: 'No Payments records for students in this class!'});
+      } else {
+        return response.status(404).send({ error: 'No Payments records!'});
+      }
     }
   }
 

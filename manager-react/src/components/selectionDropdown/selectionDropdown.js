@@ -1,9 +1,9 @@
 import React from 'react'
-import './selectionDropdown.css'
+import './SelectionDropdown.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark, faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { useState, forwardRef, useImperativeHandle } from 'react'
-import PaneOption from '../paneOption/paneOption'
+import PaneOption from '../PaneOption/PaneOption'
 
 const SelectedItem = (props) => {
     return(

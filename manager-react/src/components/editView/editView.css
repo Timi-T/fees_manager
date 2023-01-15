@@ -1,6 +1,6 @@
-input {
+/* input {
     height: 30px;
-}
+} */
 
 #edit-con {
     position: absolute;
@@ -27,21 +27,6 @@ input {
     margin-left: 40%;
 }
 
-#return {
-    width: 40px;
-    height: 30px;
-    margin-left: -30%;
-    margin-bottom: 2%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#back {
-    transition: all .4s ease-in-out;
-}
-
 #back:hover {
     color: purple;
     cursor: pointer;
@@ -62,7 +47,7 @@ input {
 #edit-title {
     color: rgb(60, 7, 60);
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
 }
 
 .edit-input {
@@ -75,14 +60,14 @@ input {
     width: 100px;
 }
 
-input {
+/* input {
     width: 250px;
     border: 0.5px solid gray;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 5px;
     background-color: white;
-}
+} */
 
 #input-pair {
     display: flex;
@@ -154,4 +139,14 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#form-info {
+    margin-top: 0px;
 }

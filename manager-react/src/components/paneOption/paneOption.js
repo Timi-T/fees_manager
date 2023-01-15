@@ -1,5 +1,5 @@
 import React from 'react'
-import './paneOption.css'
+import './PaneOption.css'
 
 
 const PaneOption = (props) => {
