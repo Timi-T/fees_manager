@@ -60,6 +60,7 @@ input:focus {
     border-top: none;
     overflow: scroll;
     margin-top: -1px;
+    z-index: 20;
 }
 
 #searchbar-input {

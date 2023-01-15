@@ -2,9 +2,11 @@ import './editView.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
-import BigBtn from '../bigBtn/bigBtn'
+import BigBtn from '../BigBtn/BigBtn'
 import { useState, useEffect } from 'react'
 import { Loader } from '../Loader/Loader'
+
+const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST;
 
 const EditClassroom = (props) => {
     const navigate = useNavigate();
@@ -15,10 +17,18 @@ const EditClassroom = (props) => {
     const [classTeacher, setClassTeacher] = useState('');
     const [classFees, setClassFees] = useState('');
     const [save, setSave] = useState(false);
+    const [info, setInfo] = useState({});
     let editForm;
+
+    const alertMessage = (message = '', display = 'none', color = 'none') => {
+        const msg = document.getElementById('err-msg');
+        msg.innerHTML = message;
+        msg.style.display = display;
+        msg.style.color = color;
+    }
     
     useEffect(() => {
-        fetch(`http://localhost:5002/api/v1/classrooms/${props.id}?schoolName=${localStorage.currentSchool}`, {
+        fetch(`${BACKEND_HOST}/classrooms/${props.id}?schoolName=${localStorage.currentSchool}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -59,19 +69,19 @@ const EditClassroom = (props) => {
             <div id='input-single'>
                 <h4 className='input-txt'>Class name:</h4>
                 <div className='edit-input'>
-                    <input id='input-clsname' type='text' defaultValue={classroom.name} name='clsname' onChange={(event) => setClassName(event.target.value)}></input>
+                    <input id='input-clsname' type='text' defaultValue={classroom.name} name='clsname' onChange={(event) => {setClassName(event.target.value); alertMessage()}}></input>
                 </div>
             </div>
             <div id='input-single'>
                 <h4 className='input-txt'>Class Teacher:</h4>
                 <div className='edit-input'>
-                    <input id='input-teacher' type='text' defaultValue={classroom.classTeacher} name='teacher' onChange={(event) => setClassTeacher(event.target.value)}></input>
+                    <input id='input-teacher' type='text' defaultValue={classroom.classTeacher} name='teacher' onChange={(event) => {setClassTeacher(event.target.value); alertMessage()}}></input>
                 </div>
             </div>
             <div id='input-single'>
                 <h4 className='input-txt'>Class Fees:</h4>
                 <div className='edit-input'>
-                    <input id='input-fees' type='number' defaultValue={classroom.classFees} name='fees' onChange={(event) => setClassFees(event.target.value)}></input>
+                    <input id='input-fees' type='number' defaultValue={classroom.classFees} name='fees' onChange={(event) => {setClassFees(event.target.value); alertMessage()}}></input>
                 </div>
             </div>
             <div id='input-single' >
@@ -83,12 +93,62 @@ const EditClassroom = (props) => {
         </div>
 
     const saveEdit = () => {
-        setSave(true);
+        if (classroom.name !== className) info.name = className;
+        if (classroom.classTeacher !== classTeacher) info.classTeacher = classTeacher;
+        if (classroom.classFees !== classFees) info.classFees = classFees;
+
+        if (Object.keys(info).length > 0) {
+            setSave(true);
+        } else {
+            alertMessage('No changes made. Classroom is up to date!', 'block', 'green');
+        }
     }
 
     const editClass = () => {
-        console.log('put request')
-        navigate(`/classrooms/${props.id}`);
+        setIsLoading(true);
+        fetch(`${BACKEND_HOST}/classrooms/${props.id}/edit?schoolName=${localStorage.currentSchool}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify(info),
+        })
+        .then((response) => {
+        if (response.ok) { 
+            response.json().then((data) => {
+                setTimeout(() => {
+                    setIsLoading(false);
+                    navigate(`/classrooms/${data.success.name}`);
+                }, 1000)
+            });
+        } else if(response.status === 401) {
+            navigate('/login');
+        } else {
+            response.json().then((message) => {
+                setIsLoading(false)
+                setSave(false)
+                cancelSave();
+                alertMessage(message.error, 'block', 'red');
+            })
+        }
+        })
+        .catch((err) => {
+            setIsLoading(false);
+            setSave(false)
+            cancelSave();
+            alertMessage('An error occured. Please retry', 'block', 'red');
+            console.log(err.message)
+        });
+    }
+
+    const cancelSave = () => {
+        setSave(false);
+        alertMessage();
+        setInfo({});
+        setClassName(classroom.name);
+        setClassTeacher(classroom.classTeacher);
+        setClassFees(classroom.classFees);
     }
 
     const saveForm = 
@@ -103,7 +163,7 @@ const EditClassroom = (props) => {
                 <input className='immutable' value={`${classFees}`} readOnly></input>
             </div>
             <div id='final-buttons'>
-                <button className='checkout-btns' onClick={() => setSave(false)}>Cancel</button>
+                <button className='checkout-btns' onClick={() => cancelSave()}>Cancel</button>
                 <button className='checkout-btns' id='confirm-btn' onClick={() => editClass()}>Confirm</button>
             </div>
         </form>
@@ -131,7 +191,7 @@ const EditClassroom = (props) => {
                 }
             </div>
             <div id='info-page'>
-                <div>
+                <div id='center'>
                     {
                         save
                         ?
@@ -139,6 +199,9 @@ const EditClassroom = (props) => {
                         :
                         <h3 id='edit-title'>Edit classroom</h3>
                     }
+                    <div id="login-signup-msg">
+                        <h5 id="err-msg"></h5>
+                    </div>
                 </div>
                 {
                     isLoading

@@ -8,6 +8,7 @@ const util = require('util');
 const UserObject = require('../dataObjects/UserObject');
 const dbClient = require('../utils/db');
 const redisClient = require('../utils/redis');
+const { ObjectId } = require('mongodb');
 
 // Function to validate a form for user creation
 function validateUserInfo(firstname, lastname, email, phone, password) {
@@ -93,7 +94,6 @@ class UserController {
       const emailSent = await sendEmail(email, firstname, verificationCode);
 
       // When the email fails to send
-      console.log(emailSent)
       if (emailSent[0] !== 200) {
         if (emailSent[0] === 412) {
           // Invalid email
@@ -134,7 +134,7 @@ class UserController {
         return response.status(200).send({ success: 'Verified'});
       }
       // When the user isn't updated yet
-      return response.status(400).send({ error: 'Failed to update your account. Please try again using the same code' });
+      return response.status(417).send({ error: 'Failed to update your account. Please try again using the same code' });
     }
 
     // When a wrong code is provided
@@ -184,6 +184,68 @@ class UserController {
     response.send(
       { success: userObjects }
     )
+  }
+
+  // Method to edit user information
+  async editUser(request, response) {
+    // Getting request data and declaring relavant variables
+    const { userId } = request.params;
+    const user = request.user;
+    let info = request.body || {};
+    info.updatedAt = new Date;
+
+    // Get User form DB
+    const userData = await dbClient.get('users', { _id: ObjectId(userId) });
+    if (userData) {
+
+      // When the change is a password change
+      if (info.oldPwd || info.samePwd || info.newPwd) {
+        if (!info.oldPwd) return response.status(400).send({ error: 'Old Password is required' });
+        if (!info.newPwd) return response.status(400).send({ error: 'New Password is required' });
+        
+        // Check that the old password is correct
+        if (userData[0].password !== sha1(info.oldPwd)) {
+          return response.status(403).send( { error: 'Old Password is wrong!' });
+        }
+
+        // Edit password in database
+        const saved = await dbClient.put('users', { _id: ObjectId(userId) }, { password: sha1(info.newPwd) });
+        if (saved) {
+          return response.send({ success: 'Password updated successfully' });
+        }
+        return response.status(400).send( { error: 'An error occured. Please retry!' });
+      } else {
+        if (!info.password) return response.status(400).send({ error: 'Please provide a password.' });
+        // Check that the request is authorized by user
+        if (userData[0].password !== sha1(info.password)) {
+          return response.status(403).send( { error: 'Wrong Password!' });
+        }
+
+        delete info.password;
+
+        // Check if new User phone number has been used
+        if (info.phone) {
+          const existingUser = await dbClient.get('users', { phone: info.phone });
+          if (existingUser) {
+            return response.status(409).send({ error: 'This phone number has been used by another user.' });
+          }
+        }
+
+        const saved = await dbClient.put('users', { _id: ObjectId(userId) }, info);
+        if (saved) {
+          const updatedUser = await dbClient.get('users', { _id: ObjectId(userId) });
+          delete updatedUser[0].password;
+          delete updatedUser[0].createdAt;
+          delete updatedUser[0].updatedAt;
+          delete updatedUser[0].schools;
+          delete updatedUser[0].verifiedEmail;
+      
+          return response.send({ success: updatedUser[0]});
+        }
+      }
+    } else {
+      return response.status(404).send({ error: 'User doesn\'t exist. Please check ID and retry' });
+    }
   }
 }
 

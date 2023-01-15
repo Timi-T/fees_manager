@@ -27,15 +27,3 @@ const CircleBar = (props) => {
 }
 
 export default CircleBar
-
-/*
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="180px" height="180px" id="progress-bar">
-                <defs>
-                    <linearGradient id="GradientColor">
-                    <stop offset="0%" stopColor="#e91e63" />
-                    <stop offset="100%" stopColor="#673ab7" />
-                    </linearGradient>
-                </defs>
-                <circle cx="90" cy="90" r="80" stroke-linecap="round" />
-            </svg>
-*/

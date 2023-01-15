@@ -2,9 +2,11 @@ import './editView.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
-import BigBtn from '../bigBtn/bigBtn'
+import BigBtn from '../BigBtn/BigBtn'
 import { useState, useEffect } from 'react'
 import { Loader } from '../Loader/Loader'
+
+const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST;
 
 const EditSchool = (props) => {
     const navigate = useNavigate();
@@ -14,10 +16,18 @@ const EditSchool = (props) => {
     const [schName, setSchName] = useState('');
     const [address, setAddress] = useState('');
     const [save, setSave] = useState(false);
+    const [info, setInfo] = useState({});
     let editForm;
+
+    const alertMessage = (message = '', display = 'none', color = 'none') => {
+        const msg = document.getElementById('err-msg');
+        msg.innerHTML = message;
+        msg.style.display = display;
+        msg.style.color = color;
+    }
     
     useEffect(() => {
-        fetch(`http://localhost:5002/api/v1/schools/${localStorage.currentSchool}`, {
+        fetch(`${BACKEND_HOST}/schools/${localStorage.currentSchool}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -58,18 +68,18 @@ const EditSchool = (props) => {
             <div id='input-single'>
                 <h4 className='input-txt'>Name:</h4>
                 <div className='edit-input'>
-                    <input id='input-schname' type='text' defaultValue={school.name} name='schname' onChange={(event) => setSchName(event.target.value)}></input>
+                    <input id='input-schname' type='text' defaultValue={school.name} name='schname' onChange={(event) => {setSchName(event.target.value); alertMessage()}}></input>
                 </div>
             </div>
             <div id='input-single'>
                 <h4 className='input-txt'>Address:</h4>
                 <div className='edit-input'>
-                    <input id='input-schname' type='text' defaultValue={school.address} name='address' onChange={(event) => setAddress(event.target.value)}></input>
+                    <input id='input-schname' type='text' defaultValue={school.address} name='address' onChange={(event) => {setAddress(event.target.value); alertMessage()}}></input>
                 </div>
             </div>
             <div id='input-single'>
                 <h4 className='input-txt'>Level:</h4>
-                <select className="level-dropdown" name='level' required onChange={(event) => setLevel(event.target.value)}>
+                <select className="level-dropdown" name='level' required onChange={(event) => {setLevel(event.target.value); alertMessage()}}>
                   <option value="Primary">Primary</option>
                   <option value="Secondary">Secondary</option>
                   <option value="Tertiary">Tertiary</option>
@@ -85,12 +95,63 @@ const EditSchool = (props) => {
         </div>
 
     const saveEdit = () => {
-        setSave(true);
+        if (school.name !== schName) info.name = schName;
+        if (school.address !== address) info.address = address;
+        if (school.level !== level) info.level = level;
+
+        if (Object.keys(info).length > 0) {
+            setSave(true);
+        } else {
+            alertMessage('No changes made. School is up to date!', 'block', 'green');
+        }
     }
 
     const editSchool = () => {
-        console.log('put request')
-        navigate(`/schools/${schName}`);
+        setIsLoading(true);
+        fetch(`${BACKEND_HOST}/schools/${props.id}/edit`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify(info),
+        })
+        .then((response) => {
+        if (response.ok) { 
+            response.json().then((data) => {
+                setTimeout(() => {
+                    localStorage.setItem('currentSchool', data.success.name)
+                    setIsLoading(false);
+                    navigate(`/schools/${data.success.name}`);
+                }, 1000)
+            });
+        } else if(response.status === 401) {
+            navigate('/login');
+        } else {
+            response.json().then((message) => {
+                setIsLoading(false)
+                setSave(false)
+                cancelSave();
+                alertMessage(message.error, 'block', 'red');
+            })
+        }
+        })
+        .catch((err) => {
+            setIsLoading(false);
+            setSave(false)
+            cancelSave();
+            alertMessage('An error occured. Please retry', 'block', 'red');
+            console.log(err.message)
+        });
+    }
+
+    const cancelSave = () => {
+        setSave(false);
+        alertMessage();
+        setInfo({});
+        setSchName(school.name);
+        setAddress(school.address);
+        setLevel(school.level);
     }
 
     const saveForm = 
@@ -105,7 +166,7 @@ const EditSchool = (props) => {
                 <input className='immutable' value={`${level}`} readOnly></input>
             </div>
             <div id='final-buttons'>
-                <button className='checkout-btns' onClick={() => setSave(false)}>Cancel</button>
+                <button className='checkout-btns' onClick={() => cancelSave()}>Cancel</button>
                 <button className='checkout-btns' id='confirm-btn' onClick={() => editSchool()}>Confirm</button>
             </div>
         </form>
@@ -133,7 +194,7 @@ const EditSchool = (props) => {
                 }
             </div>
             <div id='info-page'>
-                <div>
+                <div id='center'>
                     {
                         save
                         ?
@@ -141,6 +202,9 @@ const EditSchool = (props) => {
                         :
                         <h3 id='edit-title'>Edit school</h3>
                     }
+                    <div id="login-signup-msg">
+                        <h5 id="err-msg"></h5>
+                    </div>
                 </div>
                 {
                     isLoading

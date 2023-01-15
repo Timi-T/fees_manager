@@ -1,3 +1,8 @@
+a {
+    text-decoration: none;
+    color: rgb(60, 7, 60);
+}
+
 #side-pane-container {
     position: fixed;
     z-index: 1;

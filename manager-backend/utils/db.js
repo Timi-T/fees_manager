@@ -48,6 +48,21 @@ class DBClient {
     }
     return false;
   }
+
+  async del(collectionName, filter) {
+    const db = this.client.db(this.database);
+    const collection = db.collection(collectionName);
+    const response = await collection.deleteOne(filter);
+    if (response.deletedCount === 0) return 410;
+    return 200;
+  }
+
+  async delMany(collectionName, filter) {
+    const db = this.client.db(this.database);
+    const collection = db.collection(collectionName);
+    const response = await collection.deleteOne(filter);
+    return response.deletedCount;
+  }
 }
 
 module.exports = new DBClient();

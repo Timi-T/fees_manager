@@ -1,6 +1,6 @@
-import React from 'react'
-import BigBtn from '../bigBtn/bigBtn'
-import './displayCard.css'
+import './DisplayCard.css';
+import BigBtn from '../BigBtn/BigBtn';
+import React from 'react';
 
 
 const DisplayCard = (props) => {
@@ -17,4 +17,4 @@ const DisplayCard = (props) => {
 }
 //<BigBtn text={"View " + props.object} />
 
-export default DisplayCard
+export default DisplayCard;

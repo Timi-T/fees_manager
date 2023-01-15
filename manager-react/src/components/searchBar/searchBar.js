@@ -3,10 +3,11 @@ import { useState } from 'react'
 import './searchBar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmarkCircle, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import PaneOption from '../paneOption/paneOption'
+import PaneOption from '../PaneOption/PaneOption'
 import { Loader } from '../Loader/Loader'
 import { useNavigate } from 'react-router-dom'
 
+const BACKEND_HOST = process.env.REACT_APP_BACKEND_HOST;
 
 const SearchBar = (props) => {
     //Searchbar component
@@ -19,7 +20,7 @@ const SearchBar = (props) => {
     useEffect(() => {
         setTimeout(() => {
             if (items.length === 0) {
-                fetch(`http://localhost:5002/api/v1/objects?schoolName=${localStorage.currentSchool}`, {
+                fetch(`${BACKEND_HOST}/objects?schoolName=${localStorage.currentSchool}`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,15 +31,16 @@ const SearchBar = (props) => {
                 if (response.ok) {
                     response.json().then((data) => {
                         setTimeout(() => {
-                            setItems(
-                                [
-                                    { name: 'Schools', path: '/schools', bold: true },
-                                    { name: 'Classrooms', path: '/classrooms', bold: true },
-                                    { name: 'Students ', path: '/students', bold: true },
-                                    { name: 'Payments', path: '/payments', bold: true },
-                                    ...data.success,
-                                ]
-                            );
+                            const objects = data.success;
+                            objects.schools = { name: 'Schools', path: '/schools', bold: true };
+                            objects.classrooms = { name: 'Classrooms', path: '/classrooms', bold: true };
+                            objects.students = { name: 'Students ', path: '/students', bold: true };
+                            objects.payments = { name: 'Payments', path: '/payments', bold: true };
+
+                            const newItems = Object.keys(objects).map((key) => {
+                                return objects[key];
+                            });
+                            setItems(newItems);
                         }, 1000);
                     });
                 } else if(response.status === 401) {
@@ -71,32 +73,10 @@ const SearchBar = (props) => {
         }
     }
 
-    /*inputValue.length > 0
-    ?
-    setPresentItems(
-        items.filter((item) => {
-            if (item.name) {
-                return (
-                    item.name.toLowerCase().includes(inputValue)
-                )
-            }
-        })
-    )
-    :
-    setPresentItems([]);*/
-
     const ClearSearch = () => {
         setinputValue("")
         setPresentItems([]);
     }
-
-    /*if (containsText) {
-        presentItems = items.filter((item) => {
-            return (
-                item.name.toLowerCase().includes(inputValue)
-            )
-        })
-    }*/
 
     return (
         <div id="search">
